@@ -2,13 +2,12 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class SmthCrvFit {
-    private int Degree;
-    ArrayList<Pair<Double,Double>> points=new ArrayList<>();
-    private int numOfpoints;
+    private final int Degree;
+    ArrayList<Pair<Double,Double>> points;
     private final double LowBound;
     private final double UpBound;
 
-    private int chromosomeLength;
+    private final int chromosomeLength;
     private final int PopSize;
     private final ArrayList<Chromosome> Population;
     private ArrayList<Chromosome> new_Population;
@@ -16,18 +15,17 @@ public class SmthCrvFit {
     private final double Pm; //mutation [0.001->0.1] e.g. 0.015
 
 
-    public SmthCrvFit(int Degree, ArrayList<Pair<Double,Double>> points,int numOfpoints) {
+    public SmthCrvFit(int Degree, ArrayList<Pair<Double, Double>> points) {
         //proplem parameters
         this.Degree=Degree;
         this.points=points;
-        this.numOfpoints=numOfpoints;
         LowBound = -10;
         UpBound = 10;
         //GA parameters
 
         this.chromosomeLength=Degree+1;
         PopSize=100;
-        Population =new ArrayList<Chromosome>(PopSize);
+        Population = new ArrayList<>(PopSize);
         Pc = 0.8;
         Pm = 0.015;
         //Algorithm
@@ -40,11 +38,12 @@ public class SmthCrvFit {
 //            System.out.println("\n");
 //
 //        }
-        for (int t = 0; t < 100; t++) {
+        new Chromosome(chromosomeLength);
+        Chromosome c;
+        for (int t = 0; t < 100  ; t++) {
             //calculate fitness to each chromosome
-            for(int i=0;i<Population.size();++i) {
-                Population.get(i).Chromosomefittness(this.points);
-               // System.out.println(  "ccal"+Population.get(i).fitness);
+            for (Chromosome chromosome : Population) {
+                chromosome.Chromosomefittness(this.points);
             }
             //selection
             Tournament_Selection();
@@ -53,12 +52,20 @@ public class SmthCrvFit {
             var parent2 =new_Population.get(0);
             //crossover
             var Cr =TwoPointCrossOver(parent1,parent2);
+
             //mutation
             Non_Uniform_Mutation(Cr.get(0),t,100);
+
+
             Non_Uniform_Mutation(Cr.get(1),t,100);
+
             //Replacment
             Population.add(Cr.get(0));
             Population.add(Cr.get(1));
+            c =getbest();
+
+            if (c.fitness<10)
+                return;
 
         }
     }
@@ -69,38 +76,37 @@ public class SmthCrvFit {
                 double random = LowBound + Math.random() * (UpBound - LowBound);
                 _chromosome.coefficients.add(random);
             }
+
             Population.add(_chromosome);
         }
     }
     //Selection
     private void Tournament_Selection() {
         new_Population = new ArrayList<>();
-        Random rand = new Random();
+        new Random();
         //Math.floor(Math.random()*(max-min+1)+min)
-        int r1 = (int) Math.floor(Math.random() * ((this. Population.size() - 1) - 0 + 1) + 0);
-        int r2 = (int) Math.floor(Math.random() * ((this. Population.size() - 1) - 0 + 1) + 0);
+        int r1 = (int) Math.floor(Math.random() * ((this.Population.size() - 1) + 1) + 0);
+        int r2 = (int) Math.floor(Math.random() * ((this.Population.size() - 1) + 1) + 0);
         // we will select two chromosomes
         while(r1==r2) {
-             r1 = (int) Math.floor(Math.random() * ((this. Population.size() - 1) - 0 + 1) + 0);
-             r2 = (int) Math.floor(Math.random() * ((this. Population.size() - 1) - 0 + 1) + 0);
+             r1 = (int) Math.floor(Math.random() * ((this.Population.size() - 1) + 1) + 0);
+             r2 = (int) Math.floor(Math.random() * ((this.Population.size() - 1) + 1) + 0);
         }
         //we selet chromosome with the highest fitness
                 if (Population.get(r1).fitness>=Population.get(r2).fitness) {
                     new_Population.add(Population.get(r1));
                     Population.remove(r1);//select it
-                    return;
                 } else  {
                     new_Population.add(Population.get(r2));
                     Population.remove(r2);
-                    return;
-        }
+                }
 
     }
     private ArrayList<Chromosome> TwoPointCrossOver(Chromosome c1,Chromosome c2)
     {
-        ArrayList<Chromosome> CrossOverResult=new ArrayList<Chromosome>();
-        Chromosome OffSpring1=c2;
-        Chromosome OffSpring2=c2;
+        ArrayList<Chromosome> CrossOverResult= new ArrayList<>();
+        Chromosome OffSpring1 = new Chromosome(chromosomeLength);
+        Chromosome OffSpring2= new Chromosome(chromosomeLength);
         double r2 = Math.random();
         if(r2<=Pc)
         {

@@ -1,5 +1,4 @@
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,17 +24,18 @@ public class Main {
                 points.add(pair);
 
             }
-            SmthCrvFit _smthCrvfit=new SmthCrvFit(Degree,points,nOfpoint);
+            SmthCrvFit _smthCrvfit=new SmthCrvFit(Degree,points);
             Chromosome _c=_smthCrvfit.getbest();
-            myWriter.append("Case"+(i+1)+":");
+            myWriter.append("Case").append(String.valueOf(i + 1)).append(":");
             System.out.println("Case"+(i+1)+":");
             for (int j = 0; j < _c.coefficients.size(); j++) {
                 myWriter.append(_c.coefficients.get(j).toString()+",");
                 System.out.print(_c.coefficients.get(j).toString()+",");
             }
-            System.out.println(_c.fitness);
-            myWriter.append(" Error"+(1/_c.fitness)+"\n");
-            System.out.println("\n Error "+(1/_c.fitness)+"\n");
+            System.out.println();
+            _c.Chromosomefittness(points);
+            myWriter.append(" Error = "+(1/_c.fitness)+"\n");
+            System.out.println("\n Error = "+(1/_c.fitness)+"\n");
         }
         myWriter.close();
     }

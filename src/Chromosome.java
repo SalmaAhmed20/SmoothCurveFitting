@@ -33,7 +33,8 @@ public class Chromosome {
             //small error best fitness
             fitness +=Math.pow((points.get(i).second-caly), 2);
         }
-        fitness=points.size()/fitness;
+        fitness=fitness/points.size();
+        //fitness = 1/fitness;
         //System.out.println(fitness);
     }
 }

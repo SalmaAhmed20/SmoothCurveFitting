@@ -27,7 +27,7 @@ public class SmthCrvFit {
         Population = new ArrayList<>(PopSize);
         new_Population = new ArrayList<>();
         Pc = 0.8;
-        Pm = 0.015;
+        Pm = 0.018;
         //Algorithm
         intialPopulation(); //worked
 //        System.out.println(Degree);
@@ -41,10 +41,10 @@ public class SmthCrvFit {
         new Chromosome(chromosomeLength);
         Chromosome c = new Chromosome(chromosomeLength);
         c.fitness = 0;
-        for (int t = 0; t < 150; t++) {
+        for (int t = 0; t < 170; t++) {
             //calculate fitness to each chromosome
             //selection
-            for (int i = 0; i < Population.size()*Pc; i++) {
+            for (int i = 0; i < Population.size() * Pc; i++) {
                 new_Population.clear();
                 for (Chromosome chromosome : Population) {
                     chromosome.Chromosomefittness(this.points);
@@ -59,16 +59,15 @@ public class SmthCrvFit {
                 var Cr = TwoPointCrossOver(parent1, parent2);
 
                 //mutation
-                Non_Uniform_Mutation(Cr.get(0), t, 150);
+                Non_Uniform_Mutation(Cr.get(0), t, 170);
 
 
-                Non_Uniform_Mutation(Cr.get(1), t, 150);
+                Non_Uniform_Mutation(Cr.get(1), t, 170);
 
                 //Replacment
                 Population.add(Cr.get(0));
                 Population.add(Cr.get(1));
             }
-
 
 
         }
@@ -90,15 +89,16 @@ public class SmthCrvFit {
     private void Tournament_Selection() {
         new_Population = new ArrayList<>();
         //Math.floor(Math.random()*(max-min+1)+min)
-        int r1 = (int) Math.floor(Math.random() * ((this.Population.size() - 1) + 1) + 0);
-        int r2 = (int) Math.floor(Math.random() * ((this.Population.size() - 1) + 1) + 0);
+        int r1;
+        int r2;
         // we will select two chromosomes
-        while (r1 == r2) {
+        do {
             r1 = (int) Math.floor(Math.random() * ((this.Population.size() - 1) + 1) + 0);
             r2 = (int) Math.floor(Math.random() * ((this.Population.size() - 1) + 1) + 0);
-        }
-        //we selet chromosome with the highest fitness
-        if (Population.get(r1).fitness >= Population.get(r2).fitness) {
+        } while (r1 == r2);
+
+        //we selet chromosome with the highest fitness (smallest error)
+        if (Population.get(r1).fitness <= Population.get(r2).fitness) {
             new_Population.add(Population.get(r1));
             Population.remove(r1);//select it
         } else {

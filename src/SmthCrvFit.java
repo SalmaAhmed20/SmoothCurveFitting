@@ -40,33 +40,33 @@ public class SmthCrvFit {
 //        }
         new Chromosome(chromosomeLength);
         Chromosome c;
-        for (int t = 0; t < 100  ; t++) {
+        for (int t = 0; t < 120 && getbest().fitness<100.00 ; t++) {
             //calculate fitness to each chromosome
             for (Chromosome chromosome : Population) {
                 chromosome.Chromosomefittness(this.points);
             }
             //selection
             Tournament_Selection();
-            var parent1 =new_Population.get(0);
+            Chromosome parent1;
+            parent1 = new_Population.get(0);
             Tournament_Selection();
-            var parent2 =new_Population.get(0);
+            Chromosome parent2;
+            parent2 = new_Population.get(0);
             //crossover
             var Cr =TwoPointCrossOver(parent1,parent2);
 
             //mutation
-            Non_Uniform_Mutation(Cr.get(0),t,100);
+            Non_Uniform_Mutation(Cr.get(0),t);
 
 
-            Non_Uniform_Mutation(Cr.get(1),t,100);
+            Non_Uniform_Mutation(Cr.get(1),t);
 
             //Replacment
             Population.add(Cr.get(0));
             Population.add(Cr.get(1));
-            c =getbest();
-
-            if (c.fitness<10)
-                return;
-
+            for (Chromosome chromosome : Population) {
+                chromosome.Chromosomefittness(this.points);
+            }
         }
     }
     private void intialPopulation(){
@@ -144,7 +144,7 @@ public class SmthCrvFit {
         CrossOverResult.add(c2);
         return CrossOverResult;
     }
-    private void Non_Uniform_Mutation(Chromosome C,int Current_Iteration,int Max_Iteration){
+    private void Non_Uniform_Mutation(Chromosome C, int Current_Iteration){
         // looping around genes of one chromosome
            for(int i=0;i<this.chromosomeLength;i++){
                //r random number to see if mutation will occur
@@ -165,7 +165,7 @@ public class SmthCrvFit {
                    Random rand = new Random();
                    double b = 0.5 +(5-0.5)*rand.nextDouble();
                    //the value of mutation at generation t
-                   double partOfValue = Math.pow(1-((double)Current_Iteration/(double) Max_Iteration),b);
+                   double partOfValue = Math.pow(1-((double)Current_Iteration/(double) 120),b);
                    double Value_Of_Change = Y *(1-Math.pow(r2,partOfValue));
                    if(Y == Delta_L){
                        C.coefficients.set(i,C.coefficients.get(i) - Value_Of_Change);

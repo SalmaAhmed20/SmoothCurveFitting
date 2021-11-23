@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Random;
 
 public class SmthCrvFit {
     private int Degree;
@@ -81,5 +82,39 @@ public class SmthCrvFit {
         CrossOverResult.add(c1);
         CrossOverResult.add(c2);
         return CrossOverResult;
+    }
+    private void Non_Uniform_Mutation(Chromosome C,int Current_Iteration,int Max_Iteration){
+        // looping around genes of one chromosome
+           for(int i=0;i<this.chromosomeLength;i++){
+               //r random number to see if mutation will occur
+               double r = Math.random();//->[0,1[
+               if (r <= this.Pm){
+                   //we will do mutation
+                   double Delta_L =C.coefficients.get(i) - this.LowBound;
+                   double Delta_U =this.UpBound - C.coefficients.get(i);
+                   double Y;
+                   //first we will generate random number->r1 [0,1]
+                   double r1 = Math.random();
+                   if(r1 < 0.5 || r1 == 0.5){
+                       Y = Delta_L;
+                   }else{
+                       Y = Delta_U;
+                   }
+                   double r2 = Math.random(); //[0,1]
+                   Random rand = new Random();
+                   double b = 0.5 +(5-0.5)*rand.nextDouble();
+                   //the value of mutation at generation t
+                   double partOfValue = Math.pow(1-((double)Current_Iteration/(double) Max_Iteration),b);
+                   double Value_Of_Change = Y *(1-Math.pow(r2,partOfValue));
+                   if(Y == Delta_L){
+                       C.coefficients.set(i,C.coefficients.get(i) - Value_Of_Change);
+                   }else{
+                       C.coefficients.set(i,C.coefficients.get(i) + Value_Of_Change);
+                   }
+
+               }
+
+           }
+
     }
 }

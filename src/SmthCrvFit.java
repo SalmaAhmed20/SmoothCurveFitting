@@ -30,7 +30,37 @@ public class SmthCrvFit {
         Population =new ArrayList<Chromosome>(PopSize);
         Pc = 0.8;
         Pm = 0.015;
+        //Algorithm
+        intialPopulation(); //worked
+//        System.out.println(Degree);
+//        for (int i = 0; i < Population.size(); i++) {
+//            for (int j = 0; j < Population.get(i).coefficients.size(); j++) {
+//                System.out.print(Population.get(i).coefficients.get(j)+ " ");
+//            }
+//            System.out.println("\n");
+//
+//        }
+        for (int t = 0; t < 100; t++) {
+            //calculate fitness to each chromosome
+            for(int i=0;i<Population.size();++i) {
+                Population.get(i).Chromosomefittness(this.points);
+               // System.out.println(  "ccal"+Population.get(i).fitness);
+            }
+            //selection
+            Tournament_Selection();
+            var parent1 =new_Population.get(0);
+            Tournament_Selection();
+            var parent2 =new_Population.get(0);
+            //crossover
+            var Cr =TwoPointCrossOver(parent1,parent2);
+            //mutation
+            Non_Uniform_Mutation(Cr.get(0),t,100);
+            Non_Uniform_Mutation(Cr.get(1),t,100);
+            //Replacment
+            Population.add(Cr.get(0));
+            Population.add(Cr.get(1));
 
+        }
     }
     private void intialPopulation(){
         for (int i = 0; i < this.PopSize; i++) {
@@ -64,6 +94,7 @@ public class SmthCrvFit {
                     Population.remove(r2);
                     return;
         }
+
     }
     private ArrayList<Chromosome> TwoPointCrossOver(Chromosome c1,Chromosome c2)
     {
@@ -139,6 +170,19 @@ public class SmthCrvFit {
                }
 
            }
-
+    }
+    public Chromosome getbest()
+    {
+        double fitness=Population.get(0).fitness;
+        int idx=0;
+        for(int i=1;i<Population.size();i++)
+        {
+            if(fitness<Population.get(i).fitness)
+            {
+                idx=i;
+                fitness=Population.get(i).fitness;
+            }
+        }
+        return Population.get(idx);
     }
 }

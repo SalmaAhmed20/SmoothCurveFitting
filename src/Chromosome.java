@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class Chromosome {
     ArrayList<Double> coefficients;
-    double fitness;
+    double fitness =0.0;
     Double fitnessUpperBound;
 
     Chromosome(int lengthofchromsome) {
@@ -18,7 +18,9 @@ public class Chromosome {
             //we start x^0 =1
             double calx = 1;
             double caly = 0;
+
             for (int j = 0; j < coefficients.size(); ++j) {
+                //System.out.println(coefficients.get(j));
                 //iter 0 y = absolute term
                 caly += calx * coefficients.get(j);
                 //change x power (multiple x on it self j time )and calc given point
@@ -32,5 +34,6 @@ public class Chromosome {
             fitness +=Math.pow((points.get(i).second-caly), 2);
         }
         fitness=points.size()/fitness;
+        //System.out.println(fitness);
     }
 }

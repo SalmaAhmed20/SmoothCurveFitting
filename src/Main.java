@@ -4,11 +4,15 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
+
     public static void main(String[] args) throws FileNotFoundException {
+
         ArrayList<Pair<Double,Double>> points=new ArrayList<>();
         File file=new File("input-2.txt");
+
         Scanner input =new Scanner(file);
         int testCases=input.nextInt();
+
         for (int i = 0; i < testCases; i++) {
             int nOfpoint=input.nextInt();
             int Degree=input.nextInt();
